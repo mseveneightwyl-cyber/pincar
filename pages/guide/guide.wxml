@@ -1,0 +1,53 @@
+<view class="guide-screen">
+  <view class="guide-glow guide-glow-one"></view>
+  <view class="guide-glow guide-glow-two"></view>
+
+  <view class="guide-header">
+    <view class="brand-lockup">PINCAR</view>
+    <button class="guide-skip" bindtap="skipGuide">{{isFirstVisit ? '跳过' : '关闭'}}</button>
+  </view>
+
+  <swiper class="guide-swiper" current="{{current}}" bindchange="onSlideChange" duration="320">
+    <swiper-item wx:for="{{slides}}" wx:key="key">
+      <view class="guide-slide">
+        <view class="guide-visual guide-visual-{{item.key}}">
+          <view wx:if="{{item.key === 'route'}}" class="route-demo">
+            <view class="demo-place"><text>起点</text><view></view><text>科学智汇城</text></view>
+            <view class="demo-route-line"><view></view><text>同方向匹配</text><view></view></view>
+            <view class="demo-place demo-place-end"><text>终点</text><view></view><text>港城莞</text></view>
+          </view>
+
+          <view wx:elif="{{item.key === 'instant'}}" class="instant-demo">
+            <view><text>我已叫车</text><text>5M6CR</text></view>
+            <view><text>我要拼车</text><text>2 / 4 人</text></view>
+          </view>
+
+          <view wx:elif="{{item.key === 'reserve'}}" class="reserve-demo">
+            <view class="demo-calendar"><text>07</text><text>SEP</text></view>
+            <view class="demo-time"><text>明天</text><text>07:50</text><text>南门集合</text></view>
+          </view>
+
+          <view wx:else class="safe-demo">
+            <text class="safe-demo-label">今日暗号</text>
+            <text class="safe-demo-code">5831</text>
+            <view class="safe-demo-people"><view>我</view><view>王</view><view>李</view><view>+</view></view>
+          </view>
+        </view>
+
+        <text class="guide-step">STEP {{item.step}}</text>
+        <text class="guide-title">{{item.title}}</text>
+        <text class="guide-copy">{{item.copy}}</text>
+      </view>
+    </swiper-item>
+  </swiper>
+
+  <view class="guide-footer">
+    <view class="guide-dots">
+      <view wx:for="{{slides}}" wx:key="key" class="guide-dot {{current === index ? 'guide-dot-active' : ''}}"></view>
+    </view>
+    <text class="guide-swipe-hint">左右滑动查看</text>
+    <button class="primary-button guide-next" bindtap="nextSlide">
+      {{current === slides.length - 1 ? '开始使用' : '下一步'}}
+    </button>
+  </view>
+</view>

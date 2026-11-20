@@ -1,0 +1,20 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/room/room",
+    "pages/group/group",
+    "pages/reserve/reserve",
+    "pages/privacy/privacy",
+    "pages/guide/guide"
+  ],
+  "window": {
+    "navigationBarTitleText": "PINCAR",
+    "navigationBarBackgroundColor": "#101827",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#101827",
+    "backgroundTextStyle": "light"
+  },
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}

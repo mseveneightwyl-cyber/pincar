@@ -1,0 +1,158 @@
+<view class="safe-screen room-screen" wx:if="{{origin}}">
+  <view class="room-header">
+    <view class="brand-lockup">PINCAR</view>
+    <view class="live-badge"><view></view><text>实时大厅</text></view>
+  </view>
+
+  <view class="route-summary glass-card">
+    <view class="route-place">
+      <text class="route-role start-role">起点</text>
+      <text class="route-name">{{origin.name}}</text>
+    </view>
+    <view class="route-middle">
+      <view class="route-line"><view></view><text>›</text></view>
+      <text class="route-middle-copy">通勤方向</text>
+    </view>
+    <view class="route-place route-place-end">
+      <text class="route-role end-role">终点</text>
+      <text class="route-name">{{origin.destinationName}}</text>
+    </view>
+  </view>
+
+  <button wx:if="{{myGroup}}" class="active-group-card" bindtap="openMyGroup">
+    <view class="active-group-icon"><view></view></view>
+    <view class="active-group-copy">
+      <text class="active-group-label">正在进行</text>
+      <text class="active-group-title">返回我的拼车队伍</text>
+      <text class="active-group-meta">暗号 {{myGroup.code}} · {{myGroup.memberCount}}/{{myGroup.maxMembers}} 人</text>
+    </view>
+    <view class="active-group-enter">›</view>
+  </button>
+
+  <view class="rides-section">
+    <view class="section-heading">
+      <view>
+        <text class="section-label">RIDES NEARBY</text>
+        <text class="section-title">已叫到的车</text>
+      </view>
+      <view class="section-count">{{boards.length}} 辆可见</view>
+    </view>
+
+    <scroll-view wx:if="{{boards.length}}" class="ride-scroll" scroll-x enable-flex show-scrollbar="{{false}}">
+      <view class="ride-row">
+        <button
+          wx:for="{{boards}}"
+          wx:key="id"
+          class="ride-ticket {{item.isFull ? 'ride-ticket-full' : ''}}"
+          data-id="{{item.id}}"
+          bindtap="confirmJoinCar"
+        >
+          <view class="ticket-head">
+            <text>车牌尾号</text>
+            <view wx:if="{{item.isFull}}">已满</view>
+            <view wx:else>{{item.seatText}} 人</view>
+          </view>
+          <text class="ticket-number">{{item.plateTail}}</text>
+          <view class="ticket-detail">
+            <view><text class="detail-dot gate-dot"></text><text>{{item.gateText}}上车</text></view>
+            <view><text class="detail-dot time-dot"></text><text>约 {{item.arrivalTime}}</text></view>
+          </view>
+          <view class="ticket-foot"><text>点击确认加入</text><text>→</text></view>
+        </button>
+      </view>
+    </scroll-view>
+
+    <view wx:else class="rides-empty glass-card">
+      <view class="empty-symbol"><view></view><view></view></view>
+      <view class="empty-copy">
+        <text class="empty-title">暂时没有车辆</text>
+        <text class="empty-text">叫到车后填写尾号，同方向的队友就能看见</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="choice-section">
+    <view class="choice-heading">
+      <text class="section-label">START HERE</text>
+      <text class="choice-title">现在需要什么？</text>
+      <text class="choice-description">即时出发，或提前发布一个时间</text>
+    </view>
+
+    <view class="action-grid">
+      <button class="choice-card reserve-choice" bindtap="openReservations">
+        <view class="choice-icon calendar-choice-icon">
+          <view class="calendar-top"></view><view class="calendar-dot"></view>
+        </view>
+        <text class="choice-name">预约拼车</text>
+        <text class="choice-copy">提前30分钟发布出发时间</text>
+        <view class="choice-link"><text>查看预约</text><text>›</text></view>
+      </button>
+
+      <button class="choice-card called-choice" bindtap="openPlateModal">
+        <view class="choice-icon car-choice-icon">
+          <view class="car-roof"></view><view class="car-base"></view>
+        </view>
+        <text class="choice-name">我已叫车</text>
+        <text class="choice-copy">填写车牌、上车门和预计时间</text>
+        <view class="choice-link"><text>发布车辆</text><text>›</text></view>
+      </button>
+
+      <button class="choice-card join-choice" bindtap="joinWaiting" loading="{{busy}}">
+        <view class="choice-icon crew-choice-icon">
+          <view></view><view></view><view></view>
+        </view>
+        <text class="choice-name">我要拼车</text>
+        <text class="choice-copy">立即加入当前方向的四人小组</text>
+        <view class="choice-link"><text>开始匹配</text><text>›</text></view>
+      </button>
+    </view>
+  </view>
+
+  <view class="room-footnote"><text>同方向匹配</text><view></view><text>最多4人一组</text><view></view><text>车牌限时展示</text></view>
+
+  <view wx:if="{{plateModalVisible}}" class="modal-mask" bindtap="closePlateModal">
+    <view class="plate-modal" catchtap="stopBubble">
+      <view class="modal-handle"></view>
+      <view class="modal-heading">
+        <view>
+          <text class="modal-kicker">车辆已到</text>
+          <text class="modal-title">发布车辆信息</text>
+        </view>
+        <view class="modal-route-mini">{{origin.shortName}} <text>→</text> {{origin.destinationName}}</view>
+      </view>
+      <text class="modal-description">仅填写车牌最后5–6位字母或数字</text>
+
+      <view class="plate-field">
+        <text class="plate-prefix">CN</text>
+        <input
+          class="plate-input"
+          maxlength="6"
+          placeholder="5M6CR"
+          placeholder-class="plate-placeholder"
+          value="{{plateInput}}"
+          focus="{{plateModalVisible}}"
+          bindinput="onPlateInput"
+        />
+      </view>
+
+      <view class="ride-options">
+        <view class="option-column option-column-wide">
+          <text class="option-label">上车位置</text>
+          <view class="gate-switch">
+            <button class="gate-option {{meetingGate === 'SOUTH_GATE' ? 'gate-active' : ''}}" data-gate="SOUTH_GATE" bindtap="selectMeetingGate">南门</button>
+            <button class="gate-option {{meetingGate === 'NORTH_GATE' ? 'gate-active' : ''}}" data-gate="NORTH_GATE" bindtap="selectMeetingGate">北门</button>
+          </view>
+        </view>
+        <view class="option-column">
+          <text class="option-label">预计到达</text>
+          <picker mode="time" value="{{arrivalTime}}" bindchange="onArrivalTimeChange">
+            <view class="time-field"><text>{{arrivalTime}}</text><text>›</text></view>
+          </picker>
+        </view>
+      </view>
+
+      <button class="primary-button modal-submit" bindtap="createCarGroup" loading="{{busy}}">确认发布</button>
+      <button class="modal-cancel" bindtap="closePlateModal">取消</button>
+    </view>
+  </view>
+</view>

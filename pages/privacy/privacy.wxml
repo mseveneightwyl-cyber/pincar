@@ -1,0 +1,28 @@
+<view class="safe-screen privacy-screen">
+  <view class="brand-lockup">PINCAR</view>
+  <text class="privacy-kicker">PRIVACY NOTICE</text>
+  <text class="privacy-title">隐私与安全说明</text>
+  <text class="privacy-updated">更新日期：2026年9月3日</text>
+
+  <view class="privacy-card glass-card">
+    <text class="privacy-section-title">我们处理哪些信息</text>
+    <text class="privacy-copy">为完成同方向拼车匹配，PINCAR会处理你主动填写或选择的昵称、通勤方向、车牌尾号、集合门和时间，以及队伍状态。</text>
+  </view>
+
+  <view class="privacy-card glass-card">
+    <text class="privacy-section-title">信息如何展示</text>
+    <text class="privacy-copy">车牌尾号只对同一通勤方向的用户限时展示；昵称和四位暗号只对同一队伍或预约小组的用户展示。小程序不获取精确定位、手机号或微信号。</text>
+  </view>
+
+  <view class="privacy-card glass-card">
+    <text class="privacy-section-title">存储与安全</text>
+    <text class="privacy-copy">数据保存于微信云开发环境，手机端不能直接读写业务数据库。即时队伍和车牌会自动过期，预约信息在出发时间后停止展示。用户输入会经过格式、内容安全和请求频率检查。</text>
+  </view>
+
+  <view class="privacy-card glass-card">
+    <text class="privacy-section-title">使用边界</text>
+    <text class="privacy-copy">PINCAR只帮助乘客组队，不提供叫车、司机派单、计价或车费代收服务。请在合规平台叫车，上车前核对车牌和司机信息，并当面确认同行者。</text>
+  </view>
+
+  <button class="primary-button privacy-accept" bindtap="acceptAndReturn">我已阅读并同意</button>
+</view>

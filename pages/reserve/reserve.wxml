@@ -1,0 +1,118 @@
+<view class="safe-screen reserve-screen" wx:if="{{origin}}">
+  <view class="reserve-ambient reserve-ambient-one"></view>
+  <view class="reserve-ambient reserve-ambient-two"></view>
+
+  <view class="reserve-header">
+    <view class="brand-lockup">PINCAR</view>
+    <text class="reserve-badge">提前计划</text>
+  </view>
+
+  <view class="reserve-route glass-card">
+    <view class="reserve-route-point">
+      <text class="reserve-route-role reserve-origin-role">起点</text>
+      <text class="reserve-route-name">{{origin.name}}</text>
+    </view>
+    <text class="reserve-route-arrow">→</text>
+    <view class="reserve-route-point reserve-route-right">
+      <text class="reserve-route-role reserve-destination-role">终点</text>
+      <text class="reserve-route-name">{{origin.destinationName}}</text>
+    </view>
+  </view>
+
+  <view class="reserve-tip">
+    <view class="reserve-tip-icon">i</view>
+    <view class="reserve-tip-copy">
+      <text class="reserve-tip-title">至少提前30分钟</text>
+      <text class="reserve-tip-text">适合较远时间的计划；临近出发请使用“我要拼车”</text>
+    </view>
+  </view>
+
+  <button class="primary-button create-reserve-button" bindtap="openCreateModal">＋ 发布我的拼车时间</button>
+
+  <view class="reserve-list-heading">
+    <view>
+      <text class="section-label">UPCOMING PLANS</text>
+      <text class="reserve-list-title">大家的预约意向</text>
+    </view>
+    <text class="reserve-count">{{reservations.length}} 个时段</text>
+  </view>
+
+  <view wx:if="{{reservations.length}}" class="reservation-list">
+    <view wx:for="{{reservations}}" wx:key="id" class="reservation-card glass-card">
+      <view class="reservation-card-top">
+        <view class="reservation-date-block">
+          <view class="reservation-day-block">
+            <text class="reservation-day">{{item.dateText}}</text>
+            <text class="reservation-time-label">集合时间</text>
+          </view>
+          <text class="reservation-time">{{item.timeText}}</text>
+        </view>
+        <view class="reservation-card-badges">
+          <view wx:if="{{item.isJoined}}" class="reservation-mine-badge">我的预约</view>
+          <view class="reservation-gate">{{item.gateText}}集合</view>
+        </view>
+      </view>
+
+      <view class="reservation-members">
+        <view class="reservation-member-stack">
+          <view wx:for="{{item.seatSlots}}" wx:for-item="member" wx:key="displayId" class="reservation-avatar {{member.isCurrentUser ? 'reservation-avatar-me' : ''}} {{member.empty ? 'reservation-avatar-empty' : ''}}">
+            {{member.empty ? '+' : member.initial}}
+          </view>
+        </view>
+        <view class="reservation-member-copy">
+          <text class="reservation-member-count">{{item.memberCount}} / 4 人</text>
+          <text class="reservation-member-caption">同一预约小组</text>
+        </view>
+      </view>
+
+      <view class="reservation-name-list">
+        <text wx:for="{{item.memberNames}}" wx:for-item="member" wx:key="displayId" class="reservation-name">
+          {{member.isCurrentUser ? '我' : member.nickname}}
+        </text>
+      </view>
+
+      <button
+        class="reservation-action {{item.isJoined ? 'reservation-leave' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="toggleReservation"
+        loading="{{busy}}"
+        disabled="{{!item.isJoined && (item.isFull || item.isTooSoon)}}"
+      >{{item.isJoined ? '退出这个预约' : (item.isTooSoon ? '距离出发不足30分钟' : (item.isFull ? '人数已满' : '加入这个预约'))}}</button>
+    </view>
+  </view>
+
+  <view wx:else class="reservation-empty glass-card">
+    <view class="reservation-empty-clock">＋</view>
+    <text class="reservation-empty-title">还没有预约意向</text>
+    <text class="reservation-empty-copy">发布一个时间，其他同方向用户就能看到并加入</text>
+  </view>
+
+  <view wx:if="{{modalVisible}}" class="modal-mask" bindtap="closeCreateModal">
+    <view class="reserve-modal glass-card" catchtap="stopBubble">
+      <view class="modal-handle"></view>
+      <text class="modal-kicker">PLAN AHEAD</text>
+      <text class="modal-title">预约拼车</text>
+      <text class="modal-copy">请选择至少30分钟后的集合时间</text>
+
+      <view class="reserve-form-label">集合位置</view>
+      <view class="gate-selector">
+        <button class="gate-option {{meetingGate === 'SOUTH_GATE' ? 'gate-option-active' : ''}}" data-gate="SOUTH_GATE" bindtap="selectMeetingGate">南门</button>
+        <button class="gate-option {{meetingGate === 'NORTH_GATE' ? 'gate-option-active' : ''}}" data-gate="NORTH_GATE" bindtap="selectMeetingGate">北门</button>
+      </view>
+
+      <view class="reserve-form-label reserve-time-label">日期与时间</view>
+      <view class="datetime-grid">
+        <picker mode="date" value="{{reserveDate}}" start="{{minDate}}" end="{{maxDate}}" bindchange="onDateChange">
+          <view class="datetime-value"><text class="datetime-type">日期</text><text class="datetime-main">{{reserveDate}}</text><text class="datetime-arrow">›</text></view>
+        </picker>
+        <picker mode="time" value="{{reserveTime}}" bindchange="onTimeChange">
+          <view class="datetime-value"><text class="datetime-type">时间</text><text class="datetime-main">{{reserveTime}}</text><text class="datetime-arrow">›</text></view>
+        </picker>
+      </view>
+
+      <view class="modal-route-copy">{{origin.name}} <text>→</text> {{origin.destinationName}}</view>
+      <button class="primary-button reserve-submit" bindtap="createReservation" loading="{{busy}}">发布预约意向</button>
+      <button class="modal-cancel" bindtap="closeCreateModal">取消</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,55 @@
+.privacy-screen {
+  padding: 30rpx 38rpx 68rpx;
+}
+
+.privacy-kicker {
+  display: block;
+  margin-top: 48rpx;
+  color: #62d9d0;
+  font-size: 20rpx;
+  font-weight: 700;
+  letter-spacing: 4rpx;
+}
+
+.privacy-title {
+  display: block;
+  margin-top: 15rpx;
+  color: #f3f7f9;
+  font-size: 48rpx;
+  font-weight: 800;
+}
+
+.privacy-updated {
+  display: block;
+  margin-top: 12rpx;
+  color: #65788b;
+  font-size: 20rpx;
+}
+
+.privacy-card {
+  margin-top: 20rpx;
+  padding: 27rpx 26rpx;
+}
+
+.privacy-card:first-of-type {
+  margin-top: 28rpx;
+}
+
+.privacy-section-title {
+  display: block;
+  color: #e7eef2;
+  font-size: 27rpx;
+  font-weight: 750;
+}
+
+.privacy-copy {
+  display: block;
+  margin-top: 12rpx;
+  color: #8495a5;
+  font-size: 23rpx;
+  line-height: 1.75;
+}
+
+.privacy-accept {
+  margin-top: 31rpx;
+}

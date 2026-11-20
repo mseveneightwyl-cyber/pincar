@@ -1,0 +1,10 @@
+node_modules/
+miniprogram_npm/
+*.log
+.DS_Store
+Thumbs.db
+project.private.config.json
+.env
+.env.*
+cloudbaserc.json
+tmp/

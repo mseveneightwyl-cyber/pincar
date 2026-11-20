@@ -1,0 +1,136 @@
+<view class="safe-screen group-screen" wx:if="{{group}}">
+  <view class="group-header">
+    <view class="brand-lockup">PINCAR</view>
+    <view class="group-status status-{{group.status}}"><view></view><text>{{statusText}}</text></view>
+  </view>
+
+  <view class="group-route" wx:if="{{origin}}">
+    <view class="group-route-place">
+      <text class="group-route-role start-role">起点</text>
+      <text>{{origin.name}}</text>
+    </view>
+    <view class="group-route-line"><view></view><text>›</text></view>
+    <view class="group-route-place group-route-end">
+      <text class="group-route-role end-role">终点</text>
+      <text>{{origin.destinationName}}</text>
+    </view>
+  </view>
+
+  <view class="code-card">
+    <view class="code-card-head">
+      <view>
+        <text class="code-caption">见面暗号</text>
+        <text class="code-subcaption">上车或寻找队友时使用</text>
+      </view>
+      <view class="countdown-pill"><view></view><text>{{remainingText}}</text></view>
+    </view>
+    <text class="code-number">{{group.code}}</text>
+    <view class="code-card-foot"><text>今日唯一</text><view></view><text>仅当前队伍可见</text></view>
+  </view>
+
+  <view wx:if="{{group.plateTail}}" class="ride-identity">
+    <view class="plate-card">
+      <view class="plate-head"><text>车牌尾号</text><text>CN</text></view>
+      <text class="plate-number">{{group.plateTail}}</text>
+      <view class="plate-foot"><view></view><text>PINCAR RIDE</text></view>
+    </view>
+    <view class="meeting-strip">
+      <view class="meeting-item">
+        <view class="meeting-icon gate-icon"><view></view></view>
+        <view><text class="meeting-label">上车位置</text><text class="meeting-value">{{group.meetingGate === 'NORTH_GATE' ? '北门' : '南门'}}</text></view>
+      </view>
+      <view class="meeting-divider"></view>
+      <view class="meeting-item meeting-item-end">
+        <view class="meeting-icon time-icon"><view></view></view>
+        <view><text class="meeting-label">预计到达</text><text class="meeting-value">{{group.arrivalTime}}</text></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="crew-section">
+    <view class="crew-heading">
+      <view>
+        <text class="section-label">YOUR CREW</text>
+        <text class="crew-title">同行队友</text>
+      </view>
+      <text class="crew-count">{{group.memberCount}} / {{group.maxMembers}}</text>
+    </view>
+    <view class="crew-card glass-card">
+      <view wx:for="{{slots}}" wx:key="index" class="crew-member {{item.empty ? 'crew-member-empty' : ''}}">
+        <view class="crew-avatar"><text>{{item.empty ? '+' : item.initial}}</text></view>
+        <text class="crew-name">{{item.empty ? '等待加入' : item.nickname}}</text>
+        <text wx:if="{{item.isLeader}}" class="crew-tag leader-tag">叫车人</text>
+        <text wx:elif="{{item.isCurrentUser}}" class="crew-tag me-tag">我</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="safety-note">
+    <view class="safety-mark">!</view>
+    <view class="safety-copy">
+      <text wx:if="{{isWaiting}}" class="safety-title">人满了或急着出发，请在其他平台叫车并填写车牌</text>
+      <block wx:else>
+        <text class="safety-title">上车后请报暗号：PINCAR小程序</text>
+        <text class="safety-detail">建议面对面建群，AA车费</text>
+      </block>
+    </view>
+  </view>
+
+  <view class="group-actions">
+    <button wx:if="{{isWaiting}}" class="primary-button" bindtap="openPlateModal">我已在其他平台叫到车</button>
+    <button wx:if="{{isCarWaiting && group.isLeader}}" class="primary-button" bindtap="markDeparted" loading="{{busy}}">确认车辆已经出发</button>
+    <button wx:if="{{!isDeparted}}" class="secondary-button danger-button" bindtap="leaveGroup" loading="{{busy}}">退出队伍</button>
+    <button wx:if="{{isDeparted}}" class="secondary-button" bindtap="finishTrip" loading="{{busy}}">结束行程</button>
+  </view>
+
+  <view wx:if="{{plateModalVisible}}" class="modal-mask" bindtap="closePlateModal">
+    <view class="plate-modal" catchtap="stopBubble">
+      <view class="modal-handle"></view>
+      <view class="modal-heading">
+        <view>
+          <text class="modal-kicker">车辆已到</text>
+          <text class="modal-title">填写车辆信息</text>
+        </view>
+        <view wx:if="{{origin}}" class="modal-route-mini">{{origin.shortName}} <text>→</text> {{origin.destinationName}}</view>
+      </view>
+      <text class="modal-description">提交后你将成为叫车人，本组会进入已叫车列表</text>
+
+      <view class="plate-field">
+        <text class="plate-prefix">CN</text>
+        <input
+          class="plate-input"
+          maxlength="6"
+          placeholder="5M6CR"
+          placeholder-class="plate-placeholder"
+          value="{{plateInput}}"
+          focus="{{plateModalVisible}}"
+          bindinput="onPlateInput"
+        />
+      </view>
+
+      <view class="ride-options">
+        <view class="option-column option-column-wide">
+          <text class="option-label">上车位置</text>
+          <view class="gate-switch">
+            <button class="gate-option {{meetingGate === 'SOUTH_GATE' ? 'gate-active' : ''}}" data-gate="SOUTH_GATE" bindtap="selectMeetingGate">南门</button>
+            <button class="gate-option {{meetingGate === 'NORTH_GATE' ? 'gate-active' : ''}}" data-gate="NORTH_GATE" bindtap="selectMeetingGate">北门</button>
+          </view>
+        </view>
+        <view class="option-column">
+          <text class="option-label">预计到达</text>
+          <picker mode="time" value="{{arrivalTime}}" bindchange="onArrivalTimeChange">
+            <view class="time-field"><text>{{arrivalTime}}</text><text>›</text></view>
+          </picker>
+        </view>
+      </view>
+
+      <button class="primary-button modal-submit" bindtap="submitPlate" loading="{{busy}}">确认发布</button>
+      <button class="modal-cancel" bindtap="closePlateModal">取消</button>
+    </view>
+  </view>
+</view>
+
+<view wx:else class="safe-screen loading-screen">
+  <view class="loading-ring"><view></view></view>
+  <text>{{loading ? '正在进入队伍' : '队伍已结束'}}</text>
+</view>

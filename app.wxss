@@ -1,0 +1,126 @@
+page {
+  min-height: 100%;
+  background: #08111f;
+  color: #f5f8fb;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+view,
+text,
+button,
+input,
+scroll-view,
+picker {
+  box-sizing: border-box;
+}
+
+button {
+  padding: 0;
+}
+
+button::after {
+  border: 0;
+}
+
+.safe-screen {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(78, 211, 196, 0.09), transparent 30%),
+    radial-gradient(circle at 0% 78%, rgba(124, 137, 232, 0.08), transparent 29%),
+    linear-gradient(160deg, #101d30 0%, #0b1525 42%, #08111f 100%);
+}
+
+.glass-card {
+  border: 1rpx solid rgba(255, 255, 255, 0.09);
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: 0 22rpx 54rpx rgba(0, 0, 0, 0.17);
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  color: #f7fafc;
+  font-size: 29rpx;
+  font-weight: 800;
+  letter-spacing: 7rpx;
+}
+
+.brand-lockup::before {
+  content: "";
+  width: 11rpx;
+  height: 11rpx;
+  margin-right: 13rpx;
+  border-radius: 50%;
+  background: #54d8cc;
+  box-shadow: 0 0 18rpx rgba(84, 216, 204, 0.8);
+}
+
+.section-label {
+  display: block;
+  color: #617489;
+  font-size: 20rpx;
+  font-weight: 700;
+  letter-spacing: 3rpx;
+}
+
+.primary-button,
+.secondary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  border-radius: 22rpx;
+  font-weight: 700;
+}
+
+.primary-button {
+  height: 92rpx;
+  background: linear-gradient(135deg, #63ded3, #38bdb6);
+  color: #09232a;
+  font-size: 29rpx;
+  box-shadow: 0 15rpx 34rpx rgba(56, 189, 182, 0.18);
+}
+
+.secondary-button {
+  height: 84rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.11);
+  background: rgba(255, 255, 255, 0.05);
+  color: #e7eef3;
+  font-size: 27rpx;
+}
+
+.danger-button {
+  border-color: rgba(239, 135, 110, 0.22);
+  background: rgba(239, 135, 110, 0.07);
+  color: #f09a85;
+}
+
+.modal-mask {
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(3, 8, 15, 0.78);
+}
+
+.modal-handle {
+  width: 66rpx;
+  height: 7rpx;
+  margin: 0 auto 32rpx;
+  border-radius: 10rpx;
+  background: #344459;
+}
+
+.modal-cancel {
+  height: 70rpx;
+  margin: 12rpx 0 0;
+  background: transparent;
+  color: #718399;
+  font-size: 25rpx;
+  line-height: 70rpx;
+}

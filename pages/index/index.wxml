@@ -1,0 +1,100 @@
+<view class="safe-screen entry-screen">
+  <view class="entry-glow entry-glow-top"></view>
+  <view class="entry-glow entry-glow-bottom"></view>
+
+  <view class="entry-header">
+    <view class="brand-lockup">PINCAR</view>
+    <view class="entry-header-actions">
+      <button class="guide-entry" bindtap="openGuide">使用指南</button>
+      <view class="online-pill">
+        <view class="online-dot"></view>
+        <text>{{cloudMode ? '实时匹配' : '演示模式'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="entry-hero">
+    <text class="hero-kicker">双向通勤 · 四人同行</text>
+    <text class="hero-title">找到同路的人，<text>一起出发</text></text>
+    <text class="hero-description">先留下称呼，再选择今天的通勤方向</text>
+  </view>
+
+  <view class="profile-panel glass-card">
+    <view class="profile-mark">P</view>
+    <view class="profile-fields">
+      <text class="profile-caption">我的称呼</text>
+      <input
+        class="nickname-input"
+        type="nickname"
+        maxlength="12"
+        placeholder="输入昵称"
+        placeholder-class="input-placeholder"
+        value="{{nickname}}"
+        bindinput="onNicknameInput"
+      />
+    </view>
+    <text class="profile-note">队友可见</text>
+  </view>
+
+  <view class="privacy-consent">
+    <view class="consent-check {{privacyAccepted ? 'consent-check-active' : ''}}" bindtap="togglePrivacyAccepted">
+      <text wx:if="{{privacyAccepted}}">✓</text>
+    </view>
+    <text bindtap="togglePrivacyAccepted">我已阅读并同意</text>
+    <text class="privacy-link" bindtap="openPrivacy">《PINCAR隐私说明》</text>
+  </view>
+
+  <view class="route-section">
+    <view class="route-heading">
+      <view>
+        <text class="section-label">TODAY'S ROUTE</text>
+        <text class="route-title">选择通勤方向</text>
+      </view>
+      <text class="route-hint">请选择起点</text>
+    </view>
+
+    <view
+      wx:for="{{locations}}"
+      wx:key="id"
+      class="route-card glass-card route-card-{{index}}"
+      data-id="{{item.id}}"
+      bindtap="chooseLocation"
+      hover-class="route-card-pressed"
+      hover-stay-time="90"
+      role="button"
+      aria-label="从{{item.name}}前往{{item.destinationName}}"
+    >
+      <view class="route-number">0{{index + 1}}</view>
+      <view class="route-path">
+        <view class="route-endpoint">
+          <view class="endpoint-label">
+            <view class="stop-dot stop-dot-start"></view>
+            <text class="stop-role start-role">起点</text>
+          </view>
+          <text class="stop-name">{{item.name}}</text>
+        </view>
+        <view class="route-flow">
+          <view class="route-flow-line"><view></view><text>→</text></view>
+          <text class="route-flow-copy">通勤方向</text>
+        </view>
+        <view class="route-endpoint route-endpoint-end">
+          <view class="endpoint-label">
+            <text class="stop-role end-role">终点</text>
+            <view class="stop-dot stop-dot-end"></view>
+          </view>
+          <text class="stop-name">{{item.destinationName}}</text>
+        </view>
+      </view>
+      <view class="route-enter">
+        <text>进入此方向</text>
+        <view>›</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="entry-footnote">
+    <view></view>
+    <text>仅匹配相同通勤方向的用户</text>
+    <view></view>
+  </view>
+</view>
